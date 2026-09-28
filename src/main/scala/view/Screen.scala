@@ -6,6 +6,7 @@ import doodle.image.syntax.all.*
 import doodle.java2d.*
 import cats.effect.unsafe.implicits.global
 import com.github.lnaj23.dijkstra.models.{Edge, Node}
+import doodle.core.font.*
 
 
 object Screen {
@@ -14,8 +15,8 @@ object Screen {
 
   def initNodes(nodes: Map[Node, List[Edge]]): Unit = {
     val images = nodes.map { case (node, edges) =>
-      val imageNode = drawNode(node)
-      val imageEdges = drawEdges(node, edges).foldLeft(Image.empty)(_ on _)
+      val imageNode = drawNode(node).foldLeft(Image.empty)(_ under _)
+      val imageEdges = drawEdges(node, edges).foldLeft(Image.empty)(_ under _)
 
       imageNode.on(imageEdges)
     }.toList
@@ -24,10 +25,15 @@ object Screen {
     finalImage.drawWithFrame(frame)
   }
 
-  private def drawNode(node: Node): Image = {
-    Image.circle(20)
+  private def drawNode(node: Node): List[Image] = {
+    List(Image.circle(20)
       .fillColor(Color.red)
-      .at(node.position._1, node.position._2)
+      .at(node.position._1, node.position._2),
+      Image.text(node.name).strokeColor(Color.blueViolet)
+      .fillColor(Color.royalBlue)
+      .font(Font.defaultSerif.withBold.withSize(FontSize.points(24)))
+        .at(node.position._1, node.position._2 + 20)
+    )
   }
 
   private def drawEdges(node: Node, edges: List[Edge]): List[Image] = {
