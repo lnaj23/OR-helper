@@ -20,8 +20,8 @@ This application bridges the gap between abstract mathematical theory and spatia
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/your-repo.git
-   cd your-repo
+   git clone https://github.com/lnaj23/OR-helper.git
+   cd OR-helper
    ```
 
 2. Run the application:
