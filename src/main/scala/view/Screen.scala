@@ -6,18 +6,20 @@ import doodle.image.syntax.all.*
 import doodle.java2d.*
 import cats.effect.unsafe.implicits.global
 import com.github.lnaj23.dijkstra.models.{Edge, Node}
+import config.AppConfig
 import doodle.core.font.*
 
 
 object Screen {
+  val nodeSize: Int = AppConfig.nodeSize
   val frame =
-    Frame.default.withSize(800, 600).withBackground(Color.midnightBlue)
+    Frame.default.withSize(AppConfig.windowWidth, AppConfig.windowHeight).withBackground(Color.midnightBlue)
 
   def initWindow(graph: Map[Node, List[Edge]]): Unit = {
     initImages(graph).drawWithFrame(frame)
   }
 
-  def initImages(graph: Map[Node, List[Edge]]): Image = {
+  private def initImages(graph: Map[Node, List[Edge]]): Image = {
     val images = graph.map { case (node, edges) =>
       val imageNode = drawNode(node).foldLeft(Image.empty)(_ under _)
       val imageEdges = drawEdges(node, edges).foldLeft(Image.empty)(_ under _)
@@ -30,13 +32,13 @@ object Screen {
   }
 
   private def drawNode(node: Node): List[Image] = {
-    List(Image.circle(20)
+    List(Image.circle(AppConfig.nodeSize)
       .fillColor(Color.red)
       .at(node.position._1, node.position._2),
       Image.text(node.name).strokeColor(Color.blueViolet)
       .fillColor(Color.royalBlue)
-      .font(Font.defaultSerif.withBold.withSize(FontSize.points(24)))
-        .at(node.position._1, node.position._2 + 20)
+      .font(Font.defaultSerif.withBold.withSize(FontSize.points(AppConfig.mediumFont)))
+        .at(node.position._1, node.position._2 + AppConfig.nodeSize)
     )
   }
 

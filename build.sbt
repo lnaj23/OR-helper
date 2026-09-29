@@ -5,3 +5,4 @@ version := "0.1.0-SNAPSHOT"
 scalaVersion := "3.8.4"
 
 libraryDependencies += "org.creativescala" %% "doodle" % "0.34.0"
+libraryDependencies += "com.typesafe" % "config" % "1.4.3"
