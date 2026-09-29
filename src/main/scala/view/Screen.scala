@@ -13,16 +13,20 @@ object Screen {
   val frame =
     Frame.default.withSize(800, 600).withBackground(Color.midnightBlue)
 
-  def initNodes(nodes: Map[Node, List[Edge]]): Unit = {
-    val images = nodes.map { case (node, edges) =>
+  def initWindow(graph: Map[Node, List[Edge]]): Unit = {
+    initImages(graph).drawWithFrame(frame)
+  }
+
+  def initImages(graph: Map[Node, List[Edge]]): Image = {
+    val images = graph.map { case (node, edges) =>
       val imageNode = drawNode(node).foldLeft(Image.empty)(_ under _)
       val imageEdges = drawEdges(node, edges).foldLeft(Image.empty)(_ under _)
 
       imageNode.on(imageEdges)
     }.toList
 
-    val finalImage = images.foldLeft(Image.empty)(_ on _)
-    finalImage.drawWithFrame(frame)
+    images.foldLeft(Image.empty)(_ on _)
+
   }
 
   private def drawNode(node: Node): List[Image] = {
@@ -42,5 +46,9 @@ object Screen {
 
     val allPaths = posDestinationsNode.map(dest => OpenPath.empty.moveTo(posSourceNode._1, posSourceNode._2).lineTo(dest._1, dest._2))
     allPaths.map(path => Image.path(path).strokeColor(Color.yellow))
+//    pathImage ++ posDestinationsNode.map(dest => Image.text(s"{").strokeColor(Color.white)
+//      .fillColor(Color.royalBlue)
+//      .font(Font.defaultSerif.withBold.withSize(FontSize.points(12)))
+//      .at((dest._1 + posSourceNode._1) / 2, (dest._2 + posSourceNode._2) / 2))
   }
 }
