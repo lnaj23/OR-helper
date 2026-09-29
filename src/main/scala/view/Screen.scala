@@ -21,36 +21,42 @@ object Screen {
 
   private def initImages(graph: Map[Node, List[Edge]]): Image = {
     val images = graph.map { case (node, edges) =>
-      val imageNode = drawNode(node).foldLeft(Image.empty)(_ under _)
-      val imageEdges = drawEdges(node, edges).foldLeft(Image.empty)(_ under _)
+      val imageNode = drawNode(node).at(node.position._1, node.position._2)
+      val imageEdges = drawEdges(node, edges)
 
-      imageNode.on(imageEdges)
-    }.toList
+      imageNode on imageEdges
+    }
 
-    images.foldLeft(Image.empty)(_ on _)
-
+    images.foldLeft(Image.empty) { (accumulateur, nouvelleImage) =>
+      accumulateur on nouvelleImage
+    }
   }
 
-  private def drawNode(node: Node): List[Image] = {
-    List(Image.circle(AppConfig.nodeSize)
+  private def drawNode(node: Node): Image = {
+    val circle = Image.circle(AppConfig.nodeSize)
       .fillColor(Color.red)
-      .at(node.position._1, node.position._2),
-      Image.text(node.name).strokeColor(Color.blueViolet)
+
+    val text = Image.text(node.name)
+      .strokeColor(Color.blueViolet)
       .fillColor(Color.royalBlue)
       .font(Font.defaultSerif.withBold.withSize(FontSize.points(AppConfig.mediumFont)))
-        .at(node.position._1, node.position._2 + AppConfig.nodeSize)
-    )
+      .at(0, AppConfig.nodeSize + 5)
+
+    text on circle
   }
 
-  private def drawEdges(node: Node, edges: List[Edge]): List[Image] = {
+  private def drawEdges(node: Node, edges: List[Edge]): Image = {
     val posSourceNode = node.position
     val posDestinationsNode: List[(Double, Double)] = edges.map(edge => edge.destination.position)
 
     val allPaths = posDestinationsNode.map(dest => OpenPath.empty.moveTo(posSourceNode._1, posSourceNode._2).lineTo(dest._1, dest._2))
-    allPaths.map(path => Image.path(path).strokeColor(Color.yellow))
-//    pathImage ++ posDestinationsNode.map(dest => Image.text(s"{").strokeColor(Color.white)
-//      .fillColor(Color.royalBlue)
-//      .font(Font.defaultSerif.withBold.withSize(FontSize.points(12)))
-//      .at((dest._1 + posSourceNode._1) / 2, (dest._2 + posSourceNode._2) / 2))
+    val edgesImage = allPaths.map(path => Image.path(path).strokeColor(Color.yellow))
+    edgesImage.foldLeft(Image.empty) { (accumulateur, nouvelleImage) =>
+      accumulateur on nouvelleImage
+    }
+    //    pathImage ++ posDestinationsNode.map(dest => Image.text(s"{").strokeColor(Color.white)
+    //      .fillColor(Color.royalBlue)
+    //      .font(Font.defaultSerif.withBold.withSize(FontSize.points(12)))
+    //      .at((dest._1 + posSourceNode._1) / 2, (dest._2 + posSourceNode._2) / 2))
   }
 }
