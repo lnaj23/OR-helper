@@ -5,6 +5,6 @@ import mapping.Graph
 
 @main def startApp(): Unit = {
   val graph = Graph()
-  val randomizedGraph = graph.initRandomMap(10)
+  val randomizedGraph = graph.initRandomMap(5)
   Screen.initWindow(randomizedGraph)
 }

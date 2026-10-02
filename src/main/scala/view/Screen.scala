@@ -47,16 +47,22 @@ object Screen {
 
   private def drawEdges(node: Node, edges: List[Edge]): Image = {
     val posSourceNode = node.position
-    val posDestinationsNode: List[(Double, Double)] = edges.map(edge => edge.destination.position)
 
-    val allPaths = posDestinationsNode.map(dest => OpenPath.empty.moveTo(posSourceNode._1, posSourceNode._2).lineTo(dest._1, dest._2))
-    val edgesImage = allPaths.map(path => Image.path(path).strokeColor(Color.yellow))
-    edgesImage.foldLeft(Image.empty) { (accumulateur, nouvelleImage) =>
+    val allPaths = edges.map(edge => OpenPath.empty.moveTo(posSourceNode._1, posSourceNode._2).lineTo(edge.destination.position._1, edge.destination.position._2))
+    val edgesPath = allPaths.map(path => Image.path(path).strokeColor(Color.yellow))
+    val edgesImage = edgesPath.foldLeft(Image.empty) { (accumulateur, nouvelleImage) =>
       accumulateur on nouvelleImage
     }
-    //    pathImage ++ posDestinationsNode.map(dest => Image.text(s"{").strokeColor(Color.white)
-    //      .fillColor(Color.royalBlue)
-    //      .font(Font.defaultSerif.withBold.withSize(FontSize.points(12)))
-    //      .at((dest._1 + posSourceNode._1) / 2, (dest._2 + posSourceNode._2) / 2))
+
+    val textImages = edges.map(edge => Image.text(s"${edge.weight}").strokeColor(Color.white)
+          .fillColor(Color.royalBlue)
+          .font(Font.defaultSerif.withBold.withSize(FontSize.points(12)))
+          .at((edge.destination.position._1 + posSourceNode._1) / 2, (edge.destination.position._2 + posSourceNode._2) / 2))
+
+    val textImage = textImages.foldLeft(Image.empty) { (accumulateur, nouvelleImage) =>
+      accumulateur on nouvelleImage
+    }
+
+    edgesImage on textImage
   }
 }
