@@ -1,6 +1,6 @@
 package com.github.lnaj23.dijkstra
 package mapping
-import com.github.lnaj23.dijkstra.models.{Edge, Node}
+import com.github.lnaj23.dijkstra.models.{Edge, Node, Point}
 import config.AppConfig
 
 import scala.util.Random
@@ -11,8 +11,8 @@ class Graph {
 
   def initRandomMap(n: Int): Map[Node, List[Edge]] = {
     val randomNodes: List[Node] = List.tabulate(n)(index =>
-      Node(s"$index", (Random.between(AppConfig.otherNodeMaxX._1, AppConfig.otherNodeMaxX._2),
-        Random.between(AppConfig.otherNodeMaxY._1, AppConfig.otherNodeMaxY._2)))
+      Node(s"$index", Point(Random.between(AppConfig.rangeNodeMaxX.min, AppConfig.rangeNodeMaxX.max),
+        Random.between(AppConfig.rangeNodeMaxY.min, AppConfig.rangeNodeMaxY.max)))
     )
     val nodes = List(start, end) ++ randomNodes
 

@@ -1,6 +1,7 @@
 package config
 
 import com.typesafe.config.ConfigFactory
+import com.github.lnaj23.dijkstra.models.{Point, RangeNode}
 
 object AppConfig {
   private val config = ConfigFactory.load()
@@ -13,9 +14,8 @@ object AppConfig {
   val smallFont: Int = config.getInt("view.small-font-size")
   val mediumFont: Int = config.getInt("view.medium-font-size")
 
-  val startNodePosition: (Double, Double) = (-windowWidth/2 + nodeSize*2, 0)
-  val endNodePosition: (Double, Double) = (windowWidth/2 - nodeSize*2, 0)
-  val otherNodeMaxX: (Double, Double) = (startNodePosition._1 + 50, endNodePosition._1 - 50)
-  val otherNodeMaxY: (Double, Double) = (startNodePosition._2 - 200, startNodePosition._2 + 200)
-  
+  val startNodePosition: Point = Point(-windowWidth/2 + nodeSize*2, 0)
+  val endNodePosition: Point = Point(windowWidth/2 - nodeSize*2, 0)
+  val rangeNodeMaxX: RangeNode = RangeNode(startNodePosition.x + 50, endNodePosition.x - 50)
+  val rangeNodeMaxY: RangeNode = RangeNode(startNodePosition.y - 200, startNodePosition._2 + 200)
 }
