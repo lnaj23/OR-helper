@@ -16,11 +16,11 @@ class Graph {
     )
     val nodes = List(start, end) ++ randomNodes
 
-    nodes.map(node => (node, createRandomEdge(nodes))).toMap
+    nodes.map(node => (node, createRandomEdge(nodes.filterNot(_ == node)))).toMap
   }
 
   private def createRandomEdge(nodes: List[Node]): List[Edge] = {
     val shuffleNodes = Random.shuffle(nodes)
-    List(Edge(shuffleNodes.head, Random.nextInt(10) + 1), Edge(shuffleNodes.last, Random.nextInt(10) + 1))
+    List(Edge(shuffleNodes.head, Random.nextInt(AppConfig.edgeWeight) + 1), Edge(shuffleNodes.last, Random.nextInt(AppConfig.edgeWeight) + 1))
   }
 }

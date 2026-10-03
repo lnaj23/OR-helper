@@ -21,17 +21,14 @@ object Screen {
     initImages(graph).drawWithFrame(frame)
   }
 
+  private def combine(images: Iterable[Image]): Image =
+    images.foldLeft(Image.empty)(_ on _)
+
   private def initImages(graph: Map[Node, List[Edge]]): Image = {
-    val images = graph.map { case (node, edges) =>
-      val imageNode = drawNode(node).at(node.position.toDoodle)
-      val imageEdges = drawEdges(node, edges)
+    val edgesImage = combine(graph.map { case (node, edges) => drawEdges(node, edges) })
+    val nodesImage = combine(graph.keys.map(node => drawNode(node).at(node.position.toDoodle)))
 
-      imageNode on imageEdges
-    }
-
-    images.foldLeft(Image.empty) { (c, newImage) =>
-      c on newImage
-    }
+    nodesImage on edgesImage
   }
 
   private def drawNode(node: Node): Image = {
@@ -62,9 +59,7 @@ object Screen {
           .at(posSourceNode.midpoint(edge.destination.position).toDoodle)
     )
 
-    val textImage = textImages.foldLeft(Image.empty) { (c, newImage) =>
-      c on newImage
-    }
+    val textImage = combine(textImages)
 
     edgesImage on textImage
   }
